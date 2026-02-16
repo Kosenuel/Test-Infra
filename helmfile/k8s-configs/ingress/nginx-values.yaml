@@ -1,0 +1,7 @@
+controller:
+  # DaemonSet + hostNetwork exposes 80/443 on each node IP.
+  kind: DaemonSet
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+  service:
+    type: ClusterIP

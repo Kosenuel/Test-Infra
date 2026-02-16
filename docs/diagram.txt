@@ -1,0 +1,32 @@
+           ┌──────────────────────────────┐
+           │           Internet           │
+           └─────────────┬────────────────┘
+                         │
+              [ Bastion / VPN Gateway ]
+                         │  (SSH / VPN)
+                         ▼
+      ┌──────────────────────────────────────────┐
+      │          OpenStack Tenant (Private)      │
+      │ ┌──────────────────────────────────────┐ │
+      │ │   Management Nodes (RKE2 + Rancher)  │ │
+      │ │   - RKE2 control-plane/etcd/worker   │ │
+      │ │   - Rancher server                   │ │
+      │ └──────────────────────────────────────┘ │
+      │         ▲                       ▲        │
+      │         │ Rancher API/UI        │        │
+      │         │ (private)             │        │
+      │ ┌───────┴───────────────────────┴──────┐ │
+      │ │      Downstream Clusters (RKE2)      │ │
+      │ │      - k8s-dev                       │ │
+      │ │      - k8s-test                      │ │
+      │ │      - k8s-prod                      │ │
+      │ └──────────────────────────────────────┘ │
+      └──────────────────────────────────────────┘
+
+OpenTofu + Terragrunt provision:
+  - Network, bastion, mgmt nodes via OpenStack
+  - Downstream clusters via Rancher2 provider
+
+Ansible + Helmfile:
+  - Bootstrap RKE2 on mgmt nodes
+  - Install Rancher, cert-manager, ArgoCD

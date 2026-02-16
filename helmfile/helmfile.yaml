@@ -1,0 +1,45 @@
+repositories:
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
+  - name: jetstack
+    url: https://charts.jetstack.io
+  - name: rancher-latest
+    url: https://releases.rancher.com/server-charts/latest
+  - name: argo
+    url: https://argoproj.github.io/argo-helm
+
+releases:
+  - name: ingress-nginx
+    namespace: ingress-nginx
+    chart: ingress-nginx/ingress-nginx
+    version: 4.11.3
+    createNamespace: true
+    values:
+      - k8s-configs/ingress/nginx-values.yaml
+
+  - name: cert-manager
+    namespace: cert-manager
+    chart: jetstack/cert-manager
+    version: v1.15.0
+    createNamespace: true
+    values:
+      - values/cert-manager.yaml
+
+  # Rancher ownership moved to ArgoCD (platform GitOps layer).
+  # Keep this block commented temporarily for rollback/break-glass use only.
+  #
+  # - name: rancher
+  #   namespace: cattle-system
+  #   chart: rancher-latest/rancher
+  #   version: 2.9.0
+  #   createNamespace: true
+  #   values:
+  #     - values/rancher.yaml
+
+  - name: argo-cd
+    namespace: argocd
+    chart: argo/argo-cd
+    version: 6.7.12
+    createNamespace: true
+    values:
+      - values/argocd.yaml

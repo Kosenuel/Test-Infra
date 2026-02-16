@@ -1,0 +1,9 @@
+hostname: rancher.protocoast.vm.fedcloud.eu
+replicas: 2
+bootstrapPassword: Chang3Me-Admin123
+ingress:
+  ingressClassName: nginx
+  tls:
+    source: letsEncrypt
+letsEncrypt:
+  email: protocoast-svc@cmcc.it
