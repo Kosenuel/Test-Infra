@@ -1,24 +1,34 @@
 # Argo CD Layout
 
-## Root app
+## Bootstrap
 
-- `apps/platform-root.yaml`: app-of-apps entrypoint
+- `bootstrap/main-root.yaml`: root `Application` entrypoint
+- `bootstrap/main/kustomization.yaml`: bundles projects and ApplicationSets
 
-## Child apps
+## Projects
 
-- `apps/platform/00-project.yaml`: `AppProject` for platform components
-- `apps/platform/10-cluster-issuer-app.yaml`
-- `apps/platform/20-cinder-csi-app.yaml`
-- `apps/platform/30-rancher-app.yaml`
+- `projects/platform-project.yaml`: platform workloads (issuer, cinder-csi, rancher)
+- `projects/data-project.yaml`: data workloads (jupyterhub, dask-gateway)
 
-## Managed manifests
+## ApplicationSets
 
-- `platform/cluster-issuer/`: `ClusterIssuer letsencrypt-prod`
-- `platform/cinder-csi/examples/`: manual secret templates (placeholders only)
+- `applicationsets/platform-cluster-issuer.main.yaml`
+- `applicationsets/platform-cinder-csi.main.yaml`
+- `applicationsets/platform-rancher.main.yaml`
+- `applicationsets/data-jupyterhub.main.yaml`
+- `applicationsets/data-dask-gateway.main.yaml`
+
+Each ApplicationSet uses a list generator. Add cluster entries there to scale to
+more clusters.
+
+## Workloads
+
+- `workloads/platform/cluster-issuer/`: `ClusterIssuer letsencrypt-prod`
+- `workloads/platform/cinder-csi/examples/`: manual secret templates
 
 Bootstrap and recovery flow is documented in `docs/GITOPS_BOOTSTRAP.md`.
 
 Notes:
 
 - Git repo URL is SSH-based: `git@github.com:CMCC-Foundation/protocoast-infra.git`
-- Add SSH credentials in Argo CD before syncing root app.
+- Add SSH credentials in Argo CD before syncing the root app.

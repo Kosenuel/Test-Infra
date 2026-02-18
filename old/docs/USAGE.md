@@ -132,10 +132,10 @@ This will:
 1. Copy or sync the `helmfile/` directory to the management node
 2. Run `helmfile apply` for day-0 components
 
-Then apply the GitOps root app to let Argo CD manage platform/data components:
+Then apply the GitOps root app to let Argo CD manage platform components:
 
 ```bash
-kubectl apply -f argocd/bootstrap/main-root.yaml
+kubectl apply -f argocd/apps/platform-root.yaml
 ```
 
 See:

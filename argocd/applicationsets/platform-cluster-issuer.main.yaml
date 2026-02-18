@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform-cluster-issuer-main
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: main
+            server: https://kubernetes.default.svc
+  template:
+    metadata:
+      name: 'platform-cluster-issuer-{{cluster}}'
+      namespace: argocd
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+      annotations:
+        argocd.argoproj.io/sync-wave: "10"
+    spec:
+      project: platform
+      source:
+        repoURL: git@github.com:CMCC-Foundation/protocoast-infra.git
+        targetRevision: main
+        path: argocd/workloads/platform/cluster-issuer
+      destination:
+        server: '{{server}}'
+        namespace: cert-manager
+      revisionHistoryLimit: 5
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 5m
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true
+          - ServerSideApply=true

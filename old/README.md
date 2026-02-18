@@ -13,8 +13,6 @@ Infrastructure-as-Code stack for **OpenStack + RKE2 + Rancher** using:
   - `ClusterIssuer`
   - `OpenStack Cinder CSI`
   - `Rancher`
-  - `JupyterHub`
-  - `Dask Gateway`
 - **Rancher2 provider** to create **downstream RKE2 clusters on OpenStack** for each env
 
 ## High-level flow
@@ -27,7 +25,7 @@ Infrastructure-as-Code stack for **OpenStack + RKE2 + Rancher** using:
 3. **Configure management cluster** with Ansible:
    - install **RKE2** on management nodes
    - install **Helmfile** and apply Day-0 bootstrap
-   - deploy platform/data components through ArgoCD root app + ApplicationSets
+   - deploy platform components through ArgoCD app-of-apps
 4. **Provision downstream clusters** via Rancher2 provider:
    - one RKE2 cluster per environment (e.g. `k8s-dev`, `k8s-test`, `k8s-prod`)
    - VMs automatically created on OpenStack by Rancher

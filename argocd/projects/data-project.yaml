@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: data
+  namespace: argocd
+spec:
+  description: Data platform workloads (JupyterHub and Dask Gateway).
+  sourceRepos:
+    - git@github.com:CMCC-Foundation/protocoast-infra.git
+    - https://jupyterhub.github.io/helm-chart
+    - https://helm.dask.org
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: daskhub
+    - server: https://kubernetes.default.svc
+      namespace: argocd
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

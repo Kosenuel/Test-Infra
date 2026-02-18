@@ -2,14 +2,18 @@ server:
   ingress:
     enabled: true
     ingressClassName: nginx
+    controller: generic
+
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
-      nginx.ingress.kubernetes.io/ssl-redirect: "true"
-    hosts: [ "argocd.protocoast.vm.fedcloud.eu" ]
-    tls:
-      - secretName: argocd-tls
-        hosts:
-          - argocd.protocoast.vm.fedcloud.eu
+      # nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+
+    hostname: argocd-protocoast.vm.fedcloud.eu
+    path: /
+    pathType: Prefix
+
+    tls: true   # <-- IMPORTANT (boolean, not secretName)
+
 configs:
   params:
     server.insecure: true

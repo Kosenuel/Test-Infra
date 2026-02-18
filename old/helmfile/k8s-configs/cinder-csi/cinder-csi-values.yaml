@@ -1,0 +1,37 @@
+# OpenStack Cinder CSI values.
+# The actual credentials are provided via Kubernetes secrets.
+secret:
+  enabled: true
+  name: cinder-csi-cloud-config
+  filename: cloud.conf
+
+csi:
+  plugin:
+    # Keep cloud-config mount explicitly because array overrides can remove defaults.
+    volumeMounts:
+      - name: cloud-config
+        mountPath: /etc/config
+        readOnly: true
+      - name: cacert
+        mountPath: /etc/config/pki
+        readOnly: true
+    volumes:
+      - name: cacert
+        secret:
+          secretName: openstack-ca-cert
+
+    nodePlugin:
+      volumeMounts:
+        - name: cacert
+          mountPath: /etc/config/pki
+          readOnly: true
+      volumes:
+        - name: cacert
+          secret:
+            secretName: openstack-ca-cert
+
+storageClass:
+  enabled: true
+  delete:
+    isDefault: true
+    allowVolumeExpansion: true
