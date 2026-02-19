@@ -1,4 +1,8 @@
 gateway:
+  service:
+    type: ClusterIP
+  ingress:
+    enabled: false
   auth:
     type: jupyterhub
     jupyterhub:
@@ -25,3 +29,7 @@ gateway:
           String("image", default="quay.io/globalcoast/protocoast-notebook:main", label="Image"),
           handler=options_handler,
       )
+
+traefik:
+  service:
+    type: ClusterIP

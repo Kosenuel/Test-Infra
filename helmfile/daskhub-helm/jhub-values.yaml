@@ -34,6 +34,12 @@ hub:
       display: false
       apiToken: some-token-for-dask-gateway-to-talk-to-jupyterhub
 
+proxy:
+  service:
+    type: ClusterIP
+  https:
+    enabled: false
+
 ingress:
   enabled: true
   ingressClassName: nginx
