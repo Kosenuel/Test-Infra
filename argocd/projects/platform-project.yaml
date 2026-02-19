@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Platform-level components managed by Argo CD ApplicationSets.
   sourceRepos:
-    - git@github.com:CMCC-Foundation/protocoast-infra.git
+    - https://github.com/Kosenuel/Test-Infra
     - https://kubernetes.github.io/cloud-provider-openstack
     - https://releases.rancher.com/server-charts/latest
   destinations:

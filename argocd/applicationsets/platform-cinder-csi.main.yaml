@@ -35,7 +35,7 @@ spec:
             releaseName: cinder-csi
             valueFiles:
               - $values/helmfile/k8s-configs/cinder-csi/cinder-csi-values.yaml
-        - repoURL: git@github.com:CMCC-Foundation/protocoast-infra.git
+        - repoURL: https://github.com/Kosenuel/Test-Infra
           targetRevision: main
           ref: values
       destination:

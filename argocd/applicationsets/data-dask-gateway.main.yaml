@@ -27,7 +27,7 @@ spec:
             releaseName: dask-gateway
             valueFiles:
               - $values/helmfile/daskhub-helm/dask-gateway-values.yaml
-        - repoURL: git@github.com:CMCC-Foundation/protocoast-infra.git
+        - repoURL: https://github.com/Kosenuel/Test-Infra
           targetRevision: main
           ref: values
       destination:

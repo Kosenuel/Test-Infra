@@ -30,5 +30,5 @@ Bootstrap and recovery flow is documented in `docs/GITOPS_BOOTSTRAP.md`.
 
 Notes:
 
-- Git repo URL is SSH-based: `git@github.com:CMCC-Foundation/protocoast-infra.git`
+- Git repo URL: `https://github.com/Kosenuel/Test-Infra`
 - Add SSH credentials in Argo CD before syncing the root app.

@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Data platform workloads (JupyterHub and Dask Gateway).
   sourceRepos:
-    - git@github.com:CMCC-Foundation/protocoast-infra.git
+    - https://github.com/Kosenuel/Test-Infra
     - https://jupyterhub.github.io/helm-chart
     - https://helm.dask.org
   destinations:

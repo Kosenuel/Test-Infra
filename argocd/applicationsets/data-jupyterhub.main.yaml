@@ -27,7 +27,7 @@ spec:
             releaseName: jupyterhub
             valueFiles:
               - $values/helmfile/daskhub-helm/jhub-values.yaml
-        - repoURL: git@github.com:CMCC-Foundation/protocoast-infra.git
+        - repoURL: https://github.com/Kosenuel/Test-Infra
           targetRevision: main
           ref: values
       destination:
