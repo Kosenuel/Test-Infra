@@ -26,6 +26,6 @@ gateway:
           handler=options_handler,
       )
 
-traefik:
-  service:
-    type: ClusterIP
+# traefik:
+#   service:
+#     type: ClusterIP
