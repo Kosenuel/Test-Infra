@@ -1,8 +1,6 @@
 gateway:
-  # service:
-  #   type: ClusterIP
-  # ingress:
-  #   enabled: false
+  traefik:
+    apiGroup: traefik.io
   auth:
     type: jupyterhub
     jupyterhub:
