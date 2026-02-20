@@ -24,8 +24,4 @@ spec:
   namespaceResourceWhitelist:
     - group: '*'
       kind: '*'
-  ignoreDifferences:
-    - group: apps
-      kind: DaemonSet
-      jqPathExpressions:
-        - .metadata.annotations."deprecated.daemonset.template.generation"
+  

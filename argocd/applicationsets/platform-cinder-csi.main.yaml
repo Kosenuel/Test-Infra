@@ -57,3 +57,10 @@ spec:
           - ApplyOutOfSyncOnly=true
           - PruneLast=true
           - ServerSideApply=true
+
+  ignoreDifferences:
+    - group: apps
+      kind: DaemonSet
+      jqPathExpressions:
+        - .metadata.annotations."deprecated.daemonset.template.generation"
+
