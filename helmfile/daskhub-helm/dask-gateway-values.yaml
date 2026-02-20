@@ -1,8 +1,8 @@
 gateway:
   service:
     type: ClusterIP
-  ingress:
-    enabled: false
+  # ingress:
+  #   enabled: false
   auth:
     type: jupyterhub
     jupyterhub:
