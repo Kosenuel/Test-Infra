@@ -1,6 +1,4 @@
 gateway:
-  traefik:
-    apiGroup: traefik.io
   auth:
     type: jupyterhub
     jupyterhub:
