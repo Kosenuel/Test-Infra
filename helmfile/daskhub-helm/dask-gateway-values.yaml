@@ -1,6 +1,6 @@
 gateway:
-  service:
-    type: ClusterIP
+  # service:
+  #   type: ClusterIP
   # ingress:
   #   enabled: false
   auth:
