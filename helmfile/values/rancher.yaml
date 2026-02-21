@@ -3,7 +3,7 @@ replicas: 2
 bootstrapPassword: Chang3Me-Admin123
 ingress:
   ingressClassName: nginx
+  extraAnnotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   tls:
-    source: letsEncrypt
-letsEncrypt:
-  email: protocoast-svc@cmcc.it
+    source: secret
