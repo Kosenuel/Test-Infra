@@ -14,7 +14,7 @@ spec:
       name: 'platform-cluster-issuer-{{cluster}}'
       namespace: argocd
       finalizers:
-        - resources-finalizer.argocd.argoproj.io
+        # - resources-finalizer.argocd.argoproj.io
       annotations:
         argocd.argoproj.io/sync-wave: "10"
     spec:
