@@ -14,7 +14,7 @@ spec:
       name: 'platform-cinder-csi-{{cluster}}'
       namespace: argocd
       finalizers:
-        # - resources-finalizer.argocd.argoproj.io
+        - resources-finalizer.argocd.argoproj.io
       annotations:
         argocd.argoproj.io/sync-wave: "20"
     spec:
