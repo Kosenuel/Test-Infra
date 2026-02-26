@@ -35,6 +35,7 @@ spec:
             releaseName: cinder-csi
             valueFiles:
               - $values/argocd/workloads/platform/cinder-csi/cinder-csi-values.yaml
+        # - repoURL: https://github.com/CMCC-Foundation/protocoast-infra
         - repoURL: https://github.com/Kosenuel/Test-Infra
           targetRevision: main
           ref: values

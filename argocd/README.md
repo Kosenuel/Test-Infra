@@ -1,34 +1,39 @@
 # Argo CD Layout
 
+This directory contains Argo CD projects, root bootstrap, and ApplicationSets for Day-1+ workloads.
+
 ## Bootstrap
 
-- `bootstrap/main-root.yaml`: root `Application` entrypoint
-- `bootstrap/main/kustomization.yaml`: bundles projects and ApplicationSets
+- `bootstrap/main-root.yaml`: root `Application` that points to `argocd/`
+- `kustomization.yaml`: lists all Argo-managed project and ApplicationSet manifests
 
 ## Projects
 
-- `projects/platform-project.yaml`: platform workloads (issuer, cinder-csi, rancher)
-- `projects/data-project.yaml`: data workloads (jupyterhub, dask-gateway)
+- `projects/platform-project.yaml`: platform workloads (ClusterIssuer, Cinder CSI)
+- `projects/data-project.yaml`: data workloads (JupyterHub, Dask Gateway)
 
 ## ApplicationSets
 
 - `applicationsets/platform-cluster-issuer.main.yaml`
 - `applicationsets/platform-cinder-csi.main.yaml`
-- `applicationsets/platform-rancher.main.yaml`
 - `applicationsets/data-jupyterhub.main.yaml`
 - `applicationsets/data-dask-gateway.main.yaml`
 
-Each ApplicationSet uses a list generator. Add cluster entries there to scale to
-more clusters.
+Each ApplicationSet currently uses a list generator with one cluster (`main`). Add generator entries to scale to more clusters.
 
 ## Workloads
 
-- `workloads/platform/cluster-issuer/`: `ClusterIssuer letsencrypt-prod`
-- `workloads/platform/cinder-csi/examples/`: manual secret templates
+- `workloads/platform/cluster-issuer/`: cert-manager ClusterIssuer manifest
+- `workloads/platform/cinder-csi/`: Cinder CSI values and required secret examples
+- `workloads/data/`: JupyterHub and Dask Gateway values
 
-Bootstrap and recovery flow is documented in `docs/GITOPS_BOOTSTRAP.md`.
+## Repository URL Convention
 
-Notes:
+- HTTPS: `https://github.com/CMCC-Foundation/protocoast-infra`
+- SSH: `git@github.com:CMCC-Foundation/protocoast-infra.git`
 
-- Git repo URL: `https://github.com/Kosenuel/Test-Infra`
-- Add SSH credentials in Argo CD before syncing the root app.
+## Important Behavior
+
+Argo CD only deploys files included by `argocd/kustomization.yaml`. A file present under `argocd/` but missing from that kustomization is not applied by the root app.
+
+If a previously managed resource is removed from `argocd/kustomization.yaml`, Argo may prune it when automated pruning is enabled.

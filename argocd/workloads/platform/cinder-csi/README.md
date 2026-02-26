@@ -1,14 +1,13 @@
-# Cinder CSI Secrets (manual for now)
+# Cinder CSI Secrets
 
-This repo intentionally keeps OpenStack credentials out of Git.
+OpenStack credentials are intentionally not stored in Git.
 
-Before syncing the Argo CD app `platform-cinder-csi`, create the required
-secrets in `kube-system` from the example manifests in `examples/`:
+Before syncing the Argo CD ApplicationSet `platform-cinder-csi-main`, create these secrets in `kube-system` from the provided examples:
 
 1. `examples/cinder-csi-cloud-config.secret.example.yaml`
 2. `examples/openstack-ca-cert.secret.example.yaml`
 
-Apply flow:
+Apply:
 
 ```bash
 kubectl apply -f argocd/workloads/platform/cinder-csi/examples/cinder-csi-cloud-config.secret.example.yaml
@@ -18,5 +17,5 @@ kubectl apply -f argocd/workloads/platform/cinder-csi/examples/openstack-ca-cert
 Then sync:
 
 ```bash
-argocd app sync platform-cinder-csi
+argocd app sync platform-cinder-csi-main
 ```

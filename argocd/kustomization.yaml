@@ -5,6 +5,5 @@ resources:
   - projects/data-project.yaml
   - applicationsets/platform-cluster-issuer.main.yaml
   - applicationsets/platform-cinder-csi.main.yaml
-  - applicationsets/platform-rancher.main.yaml
   - applicationsets/data-jupyterhub.main.yaml
   - applicationsets/data-dask-gateway.main.yaml

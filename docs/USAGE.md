@@ -1,201 +1,98 @@
+# Usage Guide (Internal Operators)
 
-# Protocoast Infra – Usage Guide
+This guide covers the operational flow for provisioning infrastructure and operating the management cluster.
 
-This guide explains how to use the **protocoast-infra** repository to deploy:
+## Stack Summary
 
-- OpenStack networking, bastion, and management nodes
-- RKE2 management cluster (via Ansible)
-- Day-0 bootstrap components (ingress-nginx, cert-manager, Argo CD via Helmfile)
-- Platform components (ClusterIssuer, Cinder CSI, Rancher via Argo CD)
-- Downstream RKE2 clusters (via OpenTofu + Rancher2 provider)
-- Environment separation through Terragrunt (`dev`, `test`, `prod`)
+- OpenTofu + Terragrunt: OpenStack infrastructure and environment orchestration
+- Ansible: RKE2 management cluster bootstrap
+- Helmfile (Day-0): ingress-nginx, cert-manager, argo-cd, rancher
+- Argo CD (Day-1+): ClusterIssuer, Cinder CSI, JupyterHub, Dask Gateway
+- Rancher2 provider: downstream cluster lifecycle in `live/<env>/rancher-mgmt`
 
----
+## Prerequisites
 
-## 1. Requirements
-
-### Local machine / CI
 - OpenTofu (`tofu`)
 - Terragrunt
 - Ansible 2.14+
-- Helm + Helmfile
-- Access to Rancher API (via VPN/Bastion)
-- Access to OpenStack API (OS_* environment vars configured)
+- Helm and Helmfile
+- kubectl access to management cluster
+- OpenStack credentials (`OS_*`)
+- Access to Rancher endpoint through bastion/VPN
 
-### Remote infrastructure
-- MinIO endpoint reachable for OpenTofu state
-- OpenStack tenant/project with permissions to manage:
-  - networks
-  - compute instances
-  - floating IPs
-
----
-
-## 2. Bootstrap the MinIO backend
-
-Go to the bootstrap directory:
-
-```bash
-cd protocoast-infra/bootstrap
-cp terraform.tfvars.example terraform.tfvars   # edit values
-tofu init
-tofu apply
-```
-
-This creates an S3-compatible bucket:
-```
-protocoast-opentofu-state
-```
-
----
-
-## 3. Terragrunt layout overview
-
-Each environment (`dev`, `test`, `prod`) has:
-
-```
-live/<env>/
-  ├── network/
-  ├── compute/
-  ├── bastion/
-  └── rancher-mgmt/
-```
-
-Terragrunt will orchestrate dependencies automatically (e.g., compute waits for network outputs).
-
----
-
-## 4. Provision an environment
-
-### 4.1 Deploy the network
+## Provision an Environment
 
 ```bash
 cd live/dev/network
 terragrunt init
 terragrunt apply
-```
 
-### 4.2 Deploy management nodes
-
-```bash
 cd ../compute
 terragrunt apply
-```
 
-### 4.3 Deploy bastion host
-
-```bash
 cd ../bastion
 terragrunt apply
-```
 
-### 4.4 Rancher downstream cluster creation
-
-This step talks directly to Rancher via its API and:
-
-- creates a **cloud credential**
-- creates a **machine config**
-- provisions an RKE2 cluster via Rancher machine pools
-
-```bash
 cd ../rancher-mgmt
 terragrunt apply
 ```
 
----
-
-## 5. Bootstrap the management cluster (RKE2)
-
-Using Ansible:
+## Bootstrap Management Cluster (RKE2)
 
 ```bash
-cd protocoast-infra/ansible
+cd ansible
 ansible-playbook -i inventory/hosts.ini playbooks/setup_mgmt_cluster.yml
 ```
 
-This installs:
-
-- rke2-server on each mgmt node
-- systemd services
-- default config in `/etc/rancher/rke2/config.yaml`
-
----
-
-## 6. Install bootstrap components via Helmfile
+## Install Day-0 Components
 
 ```bash
-ansible-playbook -i inventory/hosts.ini playbooks/install_rancher.yml
+cd helmfile
+helmfile --selector name=ingress-nginx apply
+helmfile --selector name=cert-manager apply
+helmfile --selector name=argo-cd apply
+helmfile --selector name=rancher apply
 ```
 
-This will:
+Or apply all releases:
 
-1. Copy or sync the `helmfile/` directory to the management node
-2. Run `helmfile apply` for day-0 components
+```bash
+helmfile sync
+```
 
-Then apply the GitOps root app to let Argo CD manage platform/data components:
+## Bootstrap Argo CD Root
 
 ```bash
 kubectl apply -f argocd/bootstrap/main-root.yaml
 ```
 
-See:
+## Verify Platform State
 
 ```bash
-docs/GITOPS_BOOTSTRAP.md
+kubectl get applications -n argocd
+kubectl get clusterissuer letsencrypt-prod
+kubectl get pods -n kube-system | grep -i cinder
+kubectl get pods -n daskhub
+kubectl get pods -n cattle-system
 ```
 
----
+## Access Rancher
 
-## 7. Access Rancher
-
-Rancher is exposed through the management cluster, typically via a private ingress:
+Rancher URL:
 
 `https://rancher.protocoast.vm.fedcloud.eu`
 
-Access requires either:
-
-- VPN to the private network
-- or SSH tunnel via Bastion
-
-Example SSH tunnel:
+Example bastion tunnel:
 
 ```bash
 ssh -L 8443:rancher.protocoast.vm.fedcloud.eu:443 ubuntu@<BASTION_IP>
 ```
 
-Then open:
+Then open `https://localhost:8443`.
 
-```
-https://localhost:8443
-```
+## Destroy Order
 
----
-
-## 8. Creating downstream clusters (automatic)
-
-The module:
-
-```
-modules/rancher-mgmt
-```
-
-uses the Rancher2 provider, so clusters are automatically created when Terragrunt applies.
-
-Cluster names follow the pattern:
-
-```
-k8s-dev
-k8s-test
-k8s-prod
-```
-
-All nodes are created by Rancher via OpenStack machine pools.
-
----
-
-## 9. Destroying an environment
-
-⚠️ Order matters — delete Rancher clusters before infrastructure:
+Destroy Rancher-managed clusters first:
 
 ```bash
 cd live/dev/rancher-mgmt
@@ -211,54 +108,13 @@ cd ../network
 terragrunt destroy
 ```
 
----
+## Configuration Notes
 
-## 10. Variables to configure
+- Store secrets outside Git (Vault/SOPS/External Secrets).
+- Keep chart versions pinned and upgrade by PR.
+- Keep Rancher access private (VPN or bastion only).
 
-### 10.1 Rancher variables
+## Canonical Repository URLs
 
-Inside each env:
-
-```
-rancher_api_url   = "https://rancher.protocoast.vm.fedcloud.eu"
-rancher_api_token = "token-xxxx:yyyyyyyy"
-rancher_insecure  = true
-```
-
-### 10.2 OpenStack variables
-
-```
-os_username
-os_password
-os_auth_url
-os_domain_name
-os_project_name
-openstack_image_name
-openstack_flavor_name
-openstack_network_name
-openstack_security_groups
-```
-
-### 10.3 Environment-specific values
-
-Examples in:
-
-```
-live/dev/rancher-mgmt/terragrunt.hcl
-```
-
----
-
-## 11. Notes and Best Practices
-
-- Use **Vault or SOPS** for sensitive variables (OpenStack, Rancher tokens)
-- Create one keypair per environment (`protocoast-dev-key`, etc.)
-- Use a private DNS zone for cluster hostnames
-- Keep Rancher behind Bastion/VPN at all times
-- Always apply environment components in order:
-  1. network
-  2. compute
-  3. bastion
-  4. rancher-mgmt
-
----
+- HTTPS: `https://github.com/CMCC-Foundation/protocoast-infra`
+- SSH: `git@github.com:CMCC-Foundation/protocoast-infra.git`

@@ -1,102 +1,95 @@
 # protocoast-infra
 
-Infrastructure-as-Code stack for **OpenStack + RKE2 + Rancher** using:
+Infrastructure-as-Code repository for ProtoCoast platform operations on OpenStack.
 
-- **OpenTofu** for infrastructure and Rancher integration
-- **Terragrunt** for environment orchestration (`dev`, `test`, `prod`)
-- **Ansible** to bootstrap the RKE2 *management cluster* on OpenStack VMs
-- **Helmfile** for Day-0 bootstrap:
-  - `ingress-nginx`
-  - `cert-manager`
-  - `ArgoCD`
-- **ArgoCD** for Day-1+ platform GitOps:
-  - `ClusterIssuer`
-  - `OpenStack Cinder CSI`
-  - `Rancher`
-  - `JupyterHub`
-  - `Dask Gateway`
-- **Rancher2 provider** to create **downstream RKE2 clusters on OpenStack** for each env
+This repository is intended for internal operators and provides:
 
-## High-level flow
+- OpenStack infrastructure provisioning with OpenTofu and Terragrunt
+- RKE2 management-cluster bootstrap with Ansible
+- Management-plane platform deployment with Helmfile
+- GitOps-managed platform/data workloads with Argo CD
+- Downstream cluster lifecycle through the Rancher2 provider
 
-1. **Bootstrap**: create MinIO bucket for OpenTofu state (`bootstrap/`).
-2. **Provision infra per-env** (`live/dev|test|prod/...` via Terragrunt):
-   - OpenStack network + subnet
-   - Bastion host
-   - Management nodes VMs for RKE2 + Rancher
-3. **Configure management cluster** with Ansible:
-   - install **RKE2** on management nodes
-   - install **Helmfile** and apply Day-0 bootstrap
-   - deploy platform/data components through ArgoCD root app + ApplicationSets
-4. **Provision downstream clusters** via Rancher2 provider:
-   - one RKE2 cluster per environment (e.g. `k8s-dev`, `k8s-test`, `k8s-prod`)
-   - VMs automatically created on OpenStack by Rancher
+## Deployment Model
 
-Detailed bootstrap/runbook:
+The stack uses a two-layer control model:
 
-- `docs/GITOPS_BOOTSTRAP.md`
+1. Day-0 (Helmfile)
+- ingress-nginx
+- cert-manager
+- argo-cd
+- rancher
 
-## Directory structure
+2. Day-1+ (Argo CD)
+- platform ClusterIssuer
+- OpenStack Cinder CSI
+- JupyterHub
+- Dask Gateway
 
-```text
-protocoast-infra/
-├── README.md
-├── bootstrap/
-│   └── main.tofu
-├── terragrunt.hcl
-├── live/
-│   ├── dev/
-│   ├── test/
-│   └── prod/
-├── ansible/
-│   ├── inventory/
-│   ├── playbooks/
-│   ├── roles/
-│   └── ...
-├── helmfile/
-│   ├── helmfile.yaml
-│   └── values/
-│       ├── cert-manager.yaml
-│       ├── rancher.yaml
-│       └── argocd.yaml
-└── docs/
-    └── diagram.txt
+This split avoids Argo CD bootstrap dependency issues while keeping platform/data workloads reconciled by GitOps.
+
+## Repository URL Convention
+
+Canonical HTTPS URL:
+
+`https://github.com/CMCC-Foundation/protocoast-infra`
+
+Canonical SSH URL:
+
+`git@github.com:CMCC-Foundation/protocoast-infra.git`
+
+these are the URLs consistently used in our docs, manifests, and operator commands.
+
+## High-Level Operator Flow
+
+1. Bootstrap remote state backend (`bootstrap/`).
+2. Provision infrastructure for an environment (`live/<env>/...`).
+3. Bootstrap RKE2 management cluster with Ansible.
+4. Install Day-0 components with Helmfile.
+5. Register Git repository in Argo CD and apply root app.
+6. Verify platform/data applications and Rancher health.
+
+## Key Paths
+
+- `bootstrap/`: state-backend bootstrap
+- `live/`: Terragrunt environment stacks
+- `ansible/`: management-cluster setup playbooks
+- `helmfile/`: Day-0 releases and values
+- `argocd/`: projects, ApplicationSets, and workload definitions
+- `docs/`: operator documentations/runbook
+
+## Quick Start 
+
+```bash
+cd bootstrap
+tofu init
+tofu apply
+
+cd ../live/dev/network
+terragrunt init
+terragrunt apply
+cd ../compute && terragrunt apply
+cd ../bastion && terragrunt apply
+cd ../rancher-mgmt && terragrunt apply
+
+cd ../../../ansible
+ansible-playbook -i inventory/hosts.ini playbooks/setup_mgmt_cluster.yml
+ansible-playbook -i inventory/hosts.ini playbooks/install_rancher.yml
+
+cd ../helmfile
+helmfile sync
+
+kubectl apply -f ../argocd/bootstrap/main-root.yaml
 ```
 
-## Usage overview
+## Documentation Index
 
-1. **Bootstrap state backend** (MinIO):
+- `docs/USAGE.md`: end-to-end operations guide
+- `docs/GITOPS_BOOTSTRAP.md`: Argo CD bootstrap and recovery doc/runbook
+- `argocd/README.md`: Argo CD layout and ownership boundaries
 
-   ```bash
-   cd bootstrap
-   tofu init
-   tofu apply
-   ```
+## Operational Notes
 
-2. **Provision infra for one env (e.g. dev)**:
-
-   ```bash
-   cd live/dev/network
-   terragrunt init
-   terragrunt apply
-
-   cd ../compute
-   terragrunt apply
-
-   cd ../bastion
-   terragrunt apply
-
-   cd ../rancher-mgmt
-   terragrunt apply   # creates Rancher cloud credential + dev downstream cluster
-   ```
-
-3. **Bootstrap RKE2 management cluster** (from your laptop / CI):
-
-   ```bash
-   cd ansible
-   ansible-playbook -i inventory/hosts.ini playbooks/setup_mgmt_cluster.yml
-   ansible-playbook -i inventory/hosts.ini playbooks/install_rancher.yml
-   ```
-
-4. **Access Rancher** through bastion/VPN, verify clusters, then hook
-   up ArgoCD to your app repos.
+- Keep credentials out of Git. Use secure secret delivery for runtime values.
+- Chart and app versions are pinned; upgrade by PR in non-prod first.
+- If you remove Argo resources from `argocd/kustomization.yaml`, Argo may prune them automatically.

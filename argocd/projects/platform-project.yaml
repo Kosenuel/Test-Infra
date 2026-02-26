@@ -6,14 +6,11 @@ metadata:
 spec:
   description: Platform-level components managed by Argo CD ApplicationSets.
   sourceRepos:
-    - https://github.com/Kosenuel/Test-Infra
+    - https://github.com/CMCC-Foundation/protocoast-infra
     - https://kubernetes.github.io/cloud-provider-openstack
-    - https://releases.rancher.com/server-charts/latest
   destinations:
     - server: https://kubernetes.default.svc
       namespace: cert-manager
-    - server: https://kubernetes.default.svc
-      namespace: cattle-system
     - server: https://kubernetes.default.svc
       namespace: kube-system
     - server: https://kubernetes.default.svc

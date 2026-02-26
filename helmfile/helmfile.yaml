@@ -25,16 +25,13 @@ releases:
     values:
       - values/cert-manager.yaml
 
-  # Rancher ownership moved to ArgoCD (platform GitOps layer).
-  # Keep this block commented temporarily for rollback/break-glass use only.
-  #
-  # - name: rancher
-  #   namespace: cattle-system
-  #   chart: rancher-latest/rancher
-  #   version: 2.9.0
-  #   createNamespace: true
-  #   values:
-  #     - values/rancher.yaml
+  - name: rancher
+    namespace: cattle-system
+    chart: rancher-latest/rancher
+    version: 2.13.2
+    createNamespace: true
+    values:
+      - values/rancher.yaml
 
   - name: argo-cd
     namespace: argocd

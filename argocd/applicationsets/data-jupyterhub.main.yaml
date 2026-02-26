@@ -27,6 +27,7 @@ spec:
             releaseName: jupyterhub
             valueFiles:
               - $values/argocd/workloads/data/jhub-values.yaml
+        # - repoURL: https://github.com/CMCC-Foundation/protocoast-infra
         - repoURL: https://github.com/Kosenuel/Test-Infra
           targetRevision: main
           ref: values
