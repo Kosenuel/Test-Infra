@@ -26,7 +26,7 @@ spec:
           helm:
             releaseName: jupyterhub
             valueFiles:
-              - $values/helmfile/daskhub-helm/jhub-values.yaml
+              - $values/argocd/workloads/data/jhub-values.yaml
         - repoURL: https://github.com/Kosenuel/Test-Infra
           targetRevision: main
           ref: values

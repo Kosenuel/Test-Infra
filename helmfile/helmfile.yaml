@@ -15,7 +15,7 @@ releases:
     version: 4.11.3
     createNamespace: true
     values:
-      - k8s-configs/ingress/nginx-values.yaml
+      - values/nginx-values.yaml
 
   - name: cert-manager
     namespace: cert-manager

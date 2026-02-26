@@ -87,6 +87,6 @@ Argo CD then reconciles ClusterIssuer, CSI, and Rancher automatically.
 ## Version pinning policy
 
 - Git repo `targetRevision` is pinned to `main` (never `HEAD`).
-- External charts are pinned explicitly (`openstack-cinder-csi: 2.34.3`, `rancher: 2.9.0`).
+- External charts are pinned explicitly (`openstack-cinder-csi: 2.34.3`, `rancher: 2.13.0`).
 - Keep the cinder chart minor aligned with cluster minor (K8s `1.34.x` -> chart `2.34.x`).
 - Upgrade by PR only: test in non-prod, then bump chart version in Argo app manifest.

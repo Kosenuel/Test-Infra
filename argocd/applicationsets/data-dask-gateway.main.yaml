@@ -26,7 +26,7 @@ spec:
           helm:
             releaseName: dask-gateway
             valueFiles:
-              - $values/helmfile/daskhub-helm/dask-gateway-values.yaml
+              - $values/argocd/workloads/data/dask-gateway-values.yaml
         - repoURL: https://github.com/Kosenuel/Test-Infra
           targetRevision: main
           ref: values

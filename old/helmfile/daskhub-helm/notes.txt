@@ -1,6 +1,0 @@
-- I got the apiToken from the Jupyter hub GUI (you could also get one offline via cli using openssl command)
-
-- You need to install Traefik CRD (Custom Resource Definitions) on k8s before installing/upgrading the Daskhub chart.
-  This is because, dask-gateway uses its own isolated Traefik instance internally to manage routing between users and their dynamic Dask clusters.
-  You can install it by running: `kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.10/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml`
-

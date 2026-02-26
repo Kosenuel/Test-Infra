@@ -34,7 +34,7 @@ spec:
           helm:
             releaseName: cinder-csi
             valueFiles:
-              - $values/helmfile/k8s-configs/cinder-csi/cinder-csi-values.yaml
+              - $values/argocd/workloads/platform/cinder-csi/cinder-csi-values.yaml
         - repoURL: https://github.com/Kosenuel/Test-Infra
           targetRevision: main
           ref: values
@@ -58,10 +58,3 @@ spec:
           - PruneLast=true
           # I am disabling "ServerSideApply" for this ApplicationSet because the openstack-cinder-csi Helm chart's DaemonSet has a "deprecated.daemonset.template.generation" annotation that is updated by the kube-controller-manager and causes perpetual diffs. This is a known issue with the chart that has not been resolved for 2+ years, and I have no control over it since it's maintained by the OpenStack community. Disabling SSA allows Argo CD to ignore changes to this annotation and successfully sync the ApplicationSet without getting stuck in a loop.
           - ServerSideApply=false
-
-  # ignoreDifferences:
-  #   - group: apps
-  #     kind: DaemonSet
-  #     jqPathExpressions:
-  #       - .metadata.annotations."deprecated.daemonset.template.generation"
-

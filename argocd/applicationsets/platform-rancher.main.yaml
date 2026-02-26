@@ -26,7 +26,7 @@ spec:
           helm:
             releaseName: rancher
             valueFiles:
-              - $values/helmfile/values/rancher.yaml
+              - $values/argocd/workloads/platform/mgmt-apps/rancher.yaml
         - repoURL: https://github.com/Kosenuel/Test-Infra
           targetRevision: main
           ref: values
