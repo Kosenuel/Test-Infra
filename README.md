@@ -60,7 +60,7 @@ these are the URLs consistently used in our docs, manifests, and operator comman
 
 ## Quick Start 
 
-```bash
+<!-- ```bash
 cd bootstrap
 tofu init
 tofu apply
@@ -76,6 +76,14 @@ cd ../../../ansible
 ansible-playbook -i inventory/hosts.ini playbooks/setup_mgmt_cluster.yml
 ansible-playbook -i inventory/hosts.ini playbooks/install_rancher.yml
 
+cd ../helmfile
+helmfile sync -->
+
+After setting up your infrastructure using terraform, 
+ssh into the mgmt cluster, 
+pull this repo and run
+
+```bash
 cd ../helmfile
 helmfile sync
 
