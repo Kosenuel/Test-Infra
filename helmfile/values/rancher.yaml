@@ -1,4 +1,4 @@
-hostname: rancher.protocoast.vm.fedcloud.eu
+hostname: rancher-protocoast.vm.fedcloud.eu
 replicas: 2
 bootstrapPassword: Chang3Me-Admin123
 ingress:
