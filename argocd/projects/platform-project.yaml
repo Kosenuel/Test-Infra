@@ -6,6 +6,7 @@ metadata:
 spec:
   description: Platform-level components managed by Argo CD ApplicationSets.
   sourceRepos:
+    - https://github.com/Kosenuel/Test-Infra
     - https://github.com/CMCC-Foundation/protocoast-infra
     - https://kubernetes.github.io/cloud-provider-openstack
   destinations:
@@ -14,6 +15,12 @@ spec:
     - server: https://kubernetes.default.svc
       namespace: kube-system
     - server: https://kubernetes.default.svc
+      namespace: argocd
+    - server: https://10.0.1.32:6443
+      namespace: cert-manager
+    - server: https://10.0.1.32:6443
+      namespace: kube-system
+    - server: https://10.0.1.32:6443
       namespace: argocd
   clusterResourceWhitelist:
     - group: '*'

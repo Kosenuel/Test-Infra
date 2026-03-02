@@ -8,7 +8,8 @@ spec:
     - list:
         elements:
           - cluster: main
-            server: https://kubernetes.default.svc
+            # server: https://kubernetes.default.svc
+            server: https://10.0.1.32:6443
   template:
     metadata:
       name: 'data-jupyterhub-{{cluster}}'

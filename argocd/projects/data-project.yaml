@@ -6,6 +6,7 @@ metadata:
 spec:
   description: Data platform workloads (JupyterHub and Dask Gateway).
   sourceRepos:
+    - https://github.com/Kosenuel/Test-Infra
     - https://github.com/CMCC-Foundation/protocoast-infra
     - https://jupyterhub.github.io/helm-chart
     - https://helm.dask.org
@@ -13,6 +14,10 @@ spec:
     - server: https://kubernetes.default.svc
       namespace: daskhub
     - server: https://kubernetes.default.svc
+      namespace: argocd
+    - server: https://10.0.1.32:6443
+      namespace: daskhub
+    - server: https://10.0.1.32:6443
       namespace: argocd
   clusterResourceWhitelist:
     - group: '*'
