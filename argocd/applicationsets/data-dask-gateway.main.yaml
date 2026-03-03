@@ -30,7 +30,7 @@ spec:
               - $values/argocd/workloads/data/dask-gateway-values.yaml
         # - repoURL: https://github.com/CMCC-Foundation/protocoast-infra
         - repoURL: https://github.com/Kosenuel/Test-Infra
-          targetRevision: main
+          targetRevision: feature/live-env
           ref: values
       destination:
         server: '{{server}}'

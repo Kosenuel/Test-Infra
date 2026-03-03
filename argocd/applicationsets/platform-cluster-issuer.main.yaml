@@ -23,7 +23,7 @@ spec:
       source:
         # repoURL: https://github.com/CMCC-Foundation/protocoast-infra
         repoURL: https://github.com/Kosenuel/Test-Infra
-        targetRevision: main
+        targetRevision: feature/live-env
         path: argocd/workloads/platform/cluster-issuer
       destination:
         server: '{{server}}'
