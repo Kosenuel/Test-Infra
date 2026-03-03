@@ -13,8 +13,8 @@ spec:
     targetRevision: feature/live-env
     path: argocd
   destination:
-    # server: https://kubernetes.default.svc
-    server: https://10.0.1.32:6443
+    server: https://kubernetes.default.svc
+    # server: https://10.0.1.32:6443
     namespace: argocd
   revisionHistoryLimit: 5
   syncPolicy:
