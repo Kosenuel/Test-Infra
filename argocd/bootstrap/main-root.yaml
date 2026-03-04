@@ -4,7 +4,7 @@ metadata:
   name: protocoast-root
   namespace: argocd
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - resources-finalizer.argocd.argoproj.io/background
 spec:
   project: default
   source:
@@ -31,4 +31,5 @@ spec:
       - CreateNamespace=true
       - ApplyOutOfSyncOnly=true
       - PruneLast=true
+      - PrunePropagationPolicy=background
       - ServerSideApply=true

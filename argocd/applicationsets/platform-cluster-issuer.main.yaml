@@ -15,7 +15,7 @@ spec:
       name: 'platform-cluster-issuer-{{cluster}}'
       namespace: argocd
       finalizers:
-        - resources-finalizer.argocd.argoproj.io
+        - resources-finalizer.argocd.argoproj.io/background
       annotations:
         argocd.argoproj.io/sync-wave: "10"
     spec:
@@ -43,4 +43,6 @@ spec:
           - CreateNamespace=true
           - ApplyOutOfSyncOnly=true
           - PruneLast=true
+          - PrunePropagationPolicy=background
           - ServerSideApply=true
+

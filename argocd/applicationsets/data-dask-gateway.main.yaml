@@ -15,7 +15,7 @@ spec:
       name: 'data-dask-gateway-{{cluster}}'
       namespace: argocd
       finalizers:
-        - resources-finalizer.argocd.argoproj.io
+        - resources-finalizer.argocd.argoproj.io/background
       annotations:
         argocd.argoproj.io/sync-wave: "50"
     spec:
@@ -50,4 +50,6 @@ spec:
           - CreateNamespace=true
           - ApplyOutOfSyncOnly=true
           - PruneLast=true
+          - PrunePropagationPolicy=background
           - SkipDryRunOnMissingResource=true
+
