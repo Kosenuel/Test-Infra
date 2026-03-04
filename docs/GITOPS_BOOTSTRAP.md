@@ -14,6 +14,7 @@ Helmfile-managed (Day-0):
 Argo CD-managed (Day-1+):
 
 - `ingress-nginx` via `argocd/applicationsets/platform-ingress-nginx.main.yaml` (workload cluster)
+- `cert-manager` via `argocd/applicationsets/platform-cert-manager.main.yaml` (workload cluster)
 - `argocd/workloads/platform/cluster-issuer/prod-issuer.yaml`
 - `openstack-cinder-csi` via `argocd/applicationsets/platform-cinder-csi.main.yaml`
 - `jupyterhub` via `argocd/applicationsets/data-jupyterhub.main.yaml`

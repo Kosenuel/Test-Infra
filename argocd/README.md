@@ -15,6 +15,7 @@ This directory contains Argo CD projects, root bootstrap, and ApplicationSets fo
 ## ApplicationSets
 
 - `applicationsets/platform-ingress-nginx.main.yaml`
+- `applicationsets/platform-cert-manager.main.yaml`
 - `applicationsets/platform-cluster-issuer.main.yaml`
 - `applicationsets/platform-cinder-csi.main.yaml`
 - `applicationsets/data-jupyterhub.main.yaml`
@@ -25,6 +26,7 @@ Each ApplicationSet currently uses a list generator with one cluster (`main`). A
 ## Workloads
 
 - `workloads/platform/cluster-issuer/`: cert-manager ClusterIssuer manifest
+- `workloads/platform/cert-manager/`: cert-manager values for workload cluster
 - `workloads/platform/cinder-csi/`: Cinder CSI values and required secret examples
 - `workloads/platform/ingress-nginx/`: ingress-nginx values for workload cluster
 - `workloads/data/`: JupyterHub and Dask Gateway values

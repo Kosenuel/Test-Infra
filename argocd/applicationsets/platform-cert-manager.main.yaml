@@ -1,0 +1,52 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: platform-cert-manager-main
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: main
+            server: https://10.0.1.32:6443
+  template:
+    metadata:
+      name: 'platform-cert-manager-{{cluster}}'
+      namespace: argocd
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io/background
+      annotations:
+        argocd.argoproj.io/sync-wave: "8"
+    spec:
+      project: platform
+      sources:
+        - repoURL: https://charts.jetstack.io
+          chart: cert-manager
+          targetRevision: v1.15.0
+          helm:
+            releaseName: cert-manager
+            valueFiles:
+              - $values/argocd/workloads/platform/cert-manager/cert-manager-values.yaml
+        - repoURL: https://github.com/Kosenuel/Test-Infra
+          targetRevision: feature/live-env
+          ref: values
+      destination:
+        server: '{{server}}'
+        namespace: cert-manager
+      revisionHistoryLimit: 5
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        retry:
+          limit: 5
+          backoff:
+            duration: 10s
+            factor: 2
+            maxDuration: 5m
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - PruneLast=true
+          - PrunePropagationPolicy=background
+          - ServerSideApply=true

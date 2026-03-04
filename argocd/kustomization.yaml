@@ -4,6 +4,7 @@ resources:
   - projects/platform-project.yaml
   - projects/data-project.yaml
   - applicationsets/platform-ingress-nginx.main.yaml
+  - applicationsets/platform-cert-manager.main.yaml
   - applicationsets/platform-cluster-issuer.main.yaml
   - applicationsets/platform-cinder-csi.main.yaml
   - applicationsets/data-jupyterhub.main.yaml

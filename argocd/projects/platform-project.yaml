@@ -10,6 +10,7 @@ spec:
     - https://github.com/CMCC-Foundation/protocoast-infra
     - https://kubernetes.github.io/cloud-provider-openstack
     - https://kubernetes.github.io/ingress-nginx
+    - https://charts.jetstack.io
   destinations:
     - server: https://kubernetes.default.svc
       namespace: cert-manager
