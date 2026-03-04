@@ -10,8 +10,8 @@ hub:
     JupyterHub:
       authenticator_class: generic-oauth
     GenericOAuthenticator:
-      client_id: "<from-secret>"
-      client_secret: "<from-secret>"
+      client_id: ""
+      client_secret: ""
       oauth_callback_url: "https://protocoast.vm.fedcloud.eu/hub/oauth_callback"
       authorize_url: "https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/auth"
       token_url: "https://aai-demo.egi.eu/auth/realms/egi/protocol/openid-connect/token"
@@ -20,7 +20,35 @@ hub:
       username_key: preferred_username
       allow_all: true
 
+  extraEnv:
+    OAUTH_CLIENT_ID:
+      valueFrom:
+        secretKeyRef:
+          name: daskhub-oauth-secrets
+          key: client_id
+    OAUTH_CLIENT_SECRET:
+      valueFrom:
+        secretKeyRef:
+          name: daskhub-oauth-secrets
+          key: client_secret
+    DASK_GATEWAY_API_TOKEN:
+      valueFrom:
+        secretKeyRef:
+          name: daskhub-gateway-secrets
+          key: api_token
+
   extraConfig:
+    protocoast-auth-secrets: |
+      import os
+      c.GenericOAuthenticator.client_id = os.environ["OAUTH_CLIENT_ID"]
+      c.GenericOAuthenticator.client_secret = os.environ["OAUTH_CLIENT_SECRET"]
+      c.JupyterHub.services = [
+          {
+              "name": "dask-gateway",
+              "api_token": os.environ["DASK_GATEWAY_API_TOKEN"],
+              "display": False,
+          }
+      ]
     protocoast-profiles: |
       c.KubeSpawner.extra_resource_guarantees = {"ephemeral-storage": "4Gi"}
       c.KubeSpawner.extra_resource_limits = {"ephemeral-storage": "8Gi"}
@@ -28,11 +56,6 @@ hub:
         {'display_name':'ProtoCoast - main','slug':'protocoast-main','default':True,'kubespawner_override':{'image':'quay.io/globalcoast/protocoast-notebook:main'}},
         {'display_name':'ProtoCoast - develop','slug':'protocoast-develop','kubespawner_override':{'image':'quay.io/globalcoast/protocoast-notebook:develop'}}
       ]
-
-  services:
-    dask-gateway:
-      display: false
-      apiToken: some-token-for-dask-gateway-to-talk-to-jupyterhub
 
 proxy:
   service:

@@ -4,6 +4,8 @@ This directory contains values files consumed by Argo CD ApplicationSets:
 
 - `jhub-values.yaml`
 - `dask-gateway-values.yaml`
+- `examples/daskhub-oauth-secrets.example.yaml`
+- `examples/daskhub-gateway-secrets.example.yaml`
 
 These values are applied through:
 
@@ -19,34 +21,24 @@ These values are applied through:
 
 ## Security Notes
 
-- Do not commit real OAuth secrets or gateway tokens.
-- Replace static placeholders/tokens with managed secrets.
-- Preferred approaches: SOPS, Vault, or External Secrets.
+- We should not commit real OAuth secrets or gateway tokens.
+- This workload expects Kubernetes Secrets in namespace `daskhub`:
+  - `daskhub-oauth-secrets` with keys `client_id` and `client_secret`
+  - `daskhub-gateway-secrets` with key `api_token`
+- We could implement them via: SOPS, Vault, or External Secrets.
 
-## Validation Workflow
+## Required Secret Setup
 
-Before changing values in production:
-
-```bash
-helm repo add jupyterhub https://jupyterhub.github.io/helm-chart/
-helm repo add dask https://helm.dask.org/
-helm repo update
-
-helm lint jupyterhub/jupyterhub -f argocd/workloads/data/jhub-values.yaml
-helm lint dask/dask-gateway -f argocd/workloads/data/dask-gateway-values.yaml
-```
-
-Render checks:
+Before syncing `data-jupyterhub-main` and `data-dask-gateway-main`, create the Secrets in the same namespace where the apps deploy (`daskhub`):
 
 ```bash
-helm template jupyterhub jupyterhub/jupyterhub \
-  --version 3.3.8 \
-  -f argocd/workloads/data/jhub-values.yaml | kubectl apply --dry-run=server -f -
-
-helm template dask-gateway dask/dask-gateway \
-  --version 2022.6.1 \
-  -f argocd/workloads/data/dask-gateway-values.yaml | kubectl apply --dry-run=server -f -
+kubectl apply -f argocd/workloads/data/examples/daskhub-oauth-secrets.example.yaml -n daskhub
+kubectl apply -f argocd/workloads/data/examples/daskhub-gateway-secrets.example.yaml -n daskhub
 ```
+
+If you wrote  `namespace: daskhub` inside the files, `-n daskhub` is optional.
+
+After changing these values and pushing them to github, Argo CD would detect it and auto apply them.
 
 ## Runtime Checks
 
