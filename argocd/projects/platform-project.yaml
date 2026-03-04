@@ -9,6 +9,7 @@ spec:
     - https://github.com/Kosenuel/Test-Infra
     - https://github.com/CMCC-Foundation/protocoast-infra
     - https://kubernetes.github.io/cloud-provider-openstack
+    - https://kubernetes.github.io/ingress-nginx
   destinations:
     - server: https://kubernetes.default.svc
       namespace: cert-manager
@@ -16,6 +17,8 @@ spec:
       namespace: kube-system
     - server: https://kubernetes.default.svc
       namespace: argocd
+    - server: https://10.0.1.32:6443
+      namespace: ingress-nginx
     - server: https://10.0.1.32:6443
       namespace: cert-manager
     - server: https://10.0.1.32:6443

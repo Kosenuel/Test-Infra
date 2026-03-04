@@ -6,13 +6,14 @@ This runbook defines ownership and bootstrap steps for the management cluster.
 
 Helmfile-managed (Day-0):
 
-- ingress-nginx
+- ingress-nginx (management cluster)
 - cert-manager
 - argo-cd
 - rancher
 
 Argo CD-managed (Day-1+):
 
+- `ingress-nginx` via `argocd/applicationsets/platform-ingress-nginx.main.yaml` (workload cluster)
 - `argocd/workloads/platform/cluster-issuer/prod-issuer.yaml`
 - `openstack-cinder-csi` via `argocd/applicationsets/platform-cinder-csi.main.yaml`
 - `jupyterhub` via `argocd/applicationsets/data-jupyterhub.main.yaml`
