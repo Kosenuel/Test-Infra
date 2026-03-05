@@ -25,7 +25,8 @@ These values are applied through:
 - This workload expects Kubernetes Secrets in namespace `daskhub`:
   - `daskhub-oauth-secrets` with keys `client_id` and `client_secret`
   - `daskhub-gateway-secrets` with key `api_token`
-- We could implement them via: SOPS, Vault, or External Secrets.
+- We could implement them via: SOPS + age.
+- `dask-gateway` values use `apiTokenFromSecretName` and `apiTokenFromSecretKey` to read the token from `daskhub-gateway-secrets`.
 
 ## Required Secret Setup
 
@@ -34,6 +35,7 @@ Before syncing `data-jupyterhub-main` and `data-dask-gateway-main`, create the S
 ```bash
 kubectl apply -f argocd/workloads/data/examples/daskhub-oauth-secrets.example.yaml -n daskhub
 kubectl apply -f argocd/workloads/data/examples/daskhub-gateway-secrets.example.yaml -n daskhub
+kubectl apply -f argocd/workloads/data/examples/dask-gateway-secrets.example.yaml -n daskhub
 ```
 
 If you wrote  `namespace: daskhub` inside the files, `-n daskhub` is optional.

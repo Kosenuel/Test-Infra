@@ -110,7 +110,7 @@ terragrunt destroy
 
 ## Configuration Notes
 
-- Store secrets outside Git (Vault/SOPS/External Secrets).
+- Store secrets outside Git (SOPS + age).
 - Keep chart versions pinned and upgrade by PR.
 - Keep Rancher access private (VPN or bastion only).
 

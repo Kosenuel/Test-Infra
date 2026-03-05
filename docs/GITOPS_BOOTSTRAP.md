@@ -83,7 +83,7 @@ Current pinned versions in repo:
 
 - openstack-cinder-csi: `2.34.3`
 - jupyterhub chart: `3.3.8`
-- dask-gateway chart: `2022.6.1`
+- dask-gateway chart: `2024.1.0`
 - rancher chart (Helmfile): `2.13.2`
 
 Use PR-based upgrades, validate in non-prod, then promote.

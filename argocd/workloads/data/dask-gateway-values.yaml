@@ -1,20 +1,14 @@
 gateway:
-  extraEnv:
-    JUPYTERHUB_API_TOKEN:
-      valueFrom:
-        secretKeyRef:
-          name: daskhub-gateway-secrets
-          key: api_token
-
   auth:
     type: jupyterhub
     jupyterhub:
-      apiToken: ""
+      # Read the shared token from Kubernetes Secret instead of a plaintext value.
+      # Secret: daskhub-gateway-secrets
+      # Key: api_token
+      apiTokenFromSecretName: daskhub-gateway-secrets
+      apiTokenFromSecretKey: api_token
 
   extraConfig:
-    authToken: |
-      import os
-      c.JupyterHubAuth.api_token = os.environ["JUPYTERHUB_API_TOKEN"]
     dasklimits: |
       c.ClusterConfig.cluster_max_cores = 4
       c.ClusterConfig.cluster_max_memory = 16 * 1024**3

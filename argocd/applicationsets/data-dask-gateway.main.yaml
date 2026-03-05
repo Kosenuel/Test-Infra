@@ -23,7 +23,7 @@ spec:
       sources:
         - repoURL: https://helm.dask.org
           chart: dask-gateway
-          targetRevision: 2022.6.1
+          targetRevision: 2024.1.0
           helm:
             releaseName: dask-gateway
             valueFiles:
