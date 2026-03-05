@@ -8,3 +8,6 @@ stringData:
   hub.config.JupyterHub.cookie_secret: "replace-with-randomly-generated-64-hex-chars"
   hub.config.CryptKeeper.keys: '["replace-with-randomly-generated-64-hex-chars"]'
   hub.config.ConfigurableHTTPProxy.auth_token: "replace-with-randomly-generated-64-hex-chars"
+# randomly generated 64 hex chars can be created by running the following command in a terminal:
+# openssl rand -hex 32
+
