@@ -6,6 +6,8 @@ hub:
       accessModes: [ReadWriteOnce]
       storage: 1Gi
 
+  existingSecret: daskhub-cookies-and-proxy-token
+
   config:
     JupyterHub:
       authenticator_class: generic-oauth
