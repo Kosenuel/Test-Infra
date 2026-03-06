@@ -23,17 +23,23 @@ configs:
 repoServer:
   initContainers:
     - name: install-ksops
-      image: viaductoss/ksops:v4.4.0
+      image: alpine:3.20
       command:
         - /bin/sh
         - -ec
       args:
         - |
+          apk add --no-cache curl tar
           mkdir -p /custom-tools/kustomize/plugin/viaduct.ai/v1/ksops
-          cp /usr/local/bin/ksops /custom-tools/kustomize/plugin/viaduct.ai/v1/ksops/ksops
-          cp /usr/local/bin/kustomize /custom-tools/kustomize/kustomize || true
+          curl -fsSL https://github.com/viaduct-ai/kustomize-sops/releases/download/v4.4.0/ksops_4.4.0_Linux_x86_64.tar.gz -o /tmp/ksops.tgz
+          tar -xzf /tmp/ksops.tgz -C /tmp
+          install -m 0755 /tmp/ksops /custom-tools/kustomize/plugin/viaduct.ai/v1/ksops/ksops
+          mkdir -p /custom-tools/kustomize
+          curl -fsSL https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize/v5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz -o /tmp/kustomize.tgz
+          tar -xzf /tmp/kustomize.tgz -C /tmp
+          install -m 0755 /tmp/kustomize /custom-tools/kustomize/kustomize
           chmod +x /custom-tools/kustomize/plugin/viaduct.ai/v1/ksops/ksops
-          chmod +x /custom-tools/kustomize/kustomize || true
+          chmod +x /custom-tools/kustomize/kustomize
       volumeMounts:
         - name: custom-tools
           mountPath: /custom-tools
