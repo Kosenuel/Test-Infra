@@ -6,6 +6,9 @@
 *.tfstate
 *.tfstate.*
 
+# sops private key
+.sops-age/
+
 # Crash log files
 crash.log
 crash.*.log
