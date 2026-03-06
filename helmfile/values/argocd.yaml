@@ -16,7 +16,7 @@ server:
 
 configs:
   params:
-    server.insecure: true
+    server.insecure: "true"
   cm:
     kustomize.buildOptions: "--enable-alpha-plugins --enable-exec"
   
@@ -29,9 +29,11 @@ repoServer:
         - -ec
       args:
         - |
-          cp /usr/local/bin/ksops /custom-tools/ksops
-          cp /usr/local/bin/kustomize /custom-tools/kustomize
-          chmod +x /custom-tools/ksops /custom-tools/kustomize
+          mkdir -p /custom-tools/kustomize/plugin/viaduct.ai/v1/ksops
+          cp /usr/local/bin/ksops /custom-tools/kustomize/plugin/viaduct.ai/v1/ksops/ksops
+          cp /usr/local/bin/kustomize /custom-tools/kustomize/kustomize || true
+          chmod +x /custom-tools/kustomize/plugin/viaduct.ai/v1/ksops/ksops
+          chmod +x /custom-tools/kustomize/kustomize || true
       volumeMounts:
         - name: custom-tools
           mountPath: /custom-tools
