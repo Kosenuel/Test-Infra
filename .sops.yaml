@@ -1,0 +1,4 @@
+creation_rules:
+  - path_regex: argocd/workloads/.*/secrets/.*\.enc\.ya?ml$
+    encrypted_regex: "^(data|stringData)$"
+    age: "age1fjvdayhz0lzd3kwqjtnagwg0eveghl9x0a96hfcucudxvklcgq9qznt7xu"

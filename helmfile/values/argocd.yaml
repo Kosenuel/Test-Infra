@@ -17,3 +17,48 @@ server:
 configs:
   params:
     server.insecure: true
+  cm:
+    kustomize.buildOptions: "--enable-alpha-plugins --enable-exec"
+  
+repoServer:
+  initContainers:
+    - name: install-ksops
+      image: viaductoss/ksops:v4.4.0
+      command:
+        - /bin/sh
+        - -ec
+      args:
+        - |
+          cp /usr/local/bin/ksops /custom-tools/ksops
+          cp /usr/local/bin/kustomize /custom-tools/kustomize
+          chmod +x /custom-tools/ksops /custom-tools/kustomize
+      volumeMounts:
+        - name: custom-tools
+          mountPath: /custom-tools
+
+  env:
+    - name: KUSTOMIZE_PLUGIN_HOME
+      value: /custom-tools/kustomize/plugin
+    - name: XDG_CONFIG_HOME
+      value: /custom-tools
+
+  volumeMounts:
+    - name: custom-tools
+      mountPath: /custom-tools
+    - name: age-key
+      mountPath: /custom-tools/.config/sops/age/keys.txt
+      subPath: keys.txt
+
+  volumes:
+    - name: custom-tools
+      emptyDir: {}
+    - name: age-key
+      secret:
+        secretName: argocd-sops-age
+        items:
+          - key: keys.txt
+            path: keys.txt
+    
+
+
+  

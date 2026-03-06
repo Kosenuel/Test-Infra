@@ -1,0 +1,3 @@
+# created: 2026-03-06T11:33:12+01:00
+# public key: age1fjvdayhz0lzd3kwqjtnagwg0eveghl9x0a96hfcucudxvklcgq9qznt7xu
+AGE-SECRET-KEY-1GE5RYDV9CELPXAFQLYGPRQJCNYQ6EYWEWNRDHPJ73FQGHX0YCSSS7M0UNT
