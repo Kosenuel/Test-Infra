@@ -49,12 +49,14 @@ repoServer:
       value: /custom-tools/kustomize/plugin
     - name: XDG_CONFIG_HOME
       value: /custom-tools
+    - name: SOPS_AGE_KEY_FILE
+      value: /custom-tools/sops/age/keys.txt
 
   volumeMounts:
     - name: custom-tools
       mountPath: /custom-tools
     - name: age-key
-      mountPath: /custom-tools/.config/sops/age/keys.txt
+      mountPath: /custom-tools/sops/age/keys.txt
       subPath: keys.txt
 
   volumes:
